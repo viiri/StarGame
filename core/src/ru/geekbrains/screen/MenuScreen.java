@@ -12,26 +12,19 @@ public class MenuScreen extends Base2DScreen {
 
     private static final float V_LEN = 2.5f;
 
-    SpriteBatch batch;
     Texture img;
     Texture background;
 
     Vector2 pos;
     Vector2 v;
-    Vector2 touch;
-
-    Vector2 buf;
 
     @Override
     public void show() {
         super.show();
-        batch = new SpriteBatch();
         background = new Texture("bg.png");
         img = new Texture("badlogic.jpg");
-        pos = new Vector2(0, 0);
-        v = new Vector2(0,0);
-        touch = new Vector2(0, 0);
-        buf = new Vector2(0, 0);
+        pos = new Vector2(-0.5f, -0.5f);
+        v = new Vector2(0.002f, 0.002f);
     }
 
     @Override
@@ -39,17 +32,11 @@ public class MenuScreen extends Base2DScreen {
         super.render(delta);
         Gdx.gl.glClearColor(0.5f, 0.2f, 0.3f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        buf.set(touch);
-        if (buf.sub(pos).len() > V_LEN) {
-            pos.add(v);
-        } else {
-            pos.set(touch);
-        }
-
         batch.begin();
-        batch.draw(background, 0, 0);
-        batch.draw(img, pos.x, pos.y);
+        batch.draw(background, -0.5f, -0.5f, 1f, 1f);
+        batch.draw(img, pos.x, pos.y, 0.5f, 0.5f);
         batch.end();
+        pos.add(v);
     }
 
     @Override
@@ -59,16 +46,12 @@ public class MenuScreen extends Base2DScreen {
 
     @Override
     public void dispose() {
-        batch.dispose();
         img.dispose();
         super.dispose();
     }
 
     @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        System.out.println("touchDown " + screenX + " " + (Gdx.graphics.getHeight() - screenY));
-        touch.set(screenX, Gdx.graphics.getHeight() - screenY);
-        v.set(touch.cpy().sub(pos).setLength(V_LEN));
-        return super.touchDown(screenX, screenY, pointer, button);
+    public boolean touchDown(Vector2 touch, int pointer) {
+        return super.touchDown(touch, pointer);
     }
 }

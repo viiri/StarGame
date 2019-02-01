@@ -2,7 +2,6 @@ package ru.geekbrains.sprite.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
@@ -47,7 +46,7 @@ public class MainShip extends Ship {
         reloadTimer += delta;
         if (reloadTimer >= reloadInterval) {
             reloadTimer = 0f;
-            shoot();
+            //shoot();
         }
         if (getRight() > worldBounds.getRight()) {
             setRight(worldBounds.getRight());

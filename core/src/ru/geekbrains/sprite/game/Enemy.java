@@ -10,7 +10,7 @@ import ru.geekbrains.pool.ExplosionPool;
 
 public class Enemy extends Ship {
 
-    private enum State {DESCENT, FIGHT}
+    private enum State {DESCENT, FIGHT, GAMOVER}
 
     private Vector2 v0 = new Vector2();
     private State state;
@@ -32,6 +32,8 @@ public class Enemy extends Ship {
     public void update(float delta) {
         super.update(delta);
         this.pos.mulAdd(v, delta);
+        if(mainShip.isDestroyed())
+            state = State.GAMOVER;
         switch (state) {
             case DESCENT:
                 if (getTop() <= worldBounds.getTop()) {
@@ -48,6 +50,12 @@ public class Enemy extends Ship {
                 if (getBottom() < worldBounds.getBottom()) {
                     mainShip.damage(this.damage);
                     destroy();
+                }
+                break;
+            case GAMOVER:
+                v.add(v0);
+                if (getTop() < worldBounds.getBottom()) {
+                    super.destroy();
                 }
                 break;
         }

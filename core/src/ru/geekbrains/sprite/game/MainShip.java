@@ -48,7 +48,7 @@ public class MainShip extends Ship {
         reloadTimer += delta;
         if (reloadTimer >= reloadInterval) {
             reloadTimer = 0f;
-            //shoot();
+            shoot();
         }
         if (getRight() > worldBounds.getRight()) {
             setRight(worldBounds.getRight());

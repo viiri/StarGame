@@ -19,6 +19,7 @@ import ru.geekbrains.sprite.Background;
 import ru.geekbrains.sprite.Star;
 import ru.geekbrains.sprite.game.Bullet;
 import ru.geekbrains.sprite.game.Enemy;
+import ru.geekbrains.sprite.game.GameOver;
 import ru.geekbrains.sprite.game.MainShip;
 import ru.geekbrains.utils.EnemyEmitter;
 
@@ -29,6 +30,7 @@ public class GameScreen extends Base2DScreen {
     private Background background;
     private Star star[];
     private MainShip mainShip;
+    private GameOver gameover;
 
     private BulletPool bulletPool;
     private ExplosionPool explosionPool;
@@ -48,6 +50,7 @@ public class GameScreen extends Base2DScreen {
         bg = new Texture("textures/bg.png");
         background = new Background(new TextureRegion(bg));
         atlas = new TextureAtlas("textures/mainAtlas.tpack");
+        gameover = new GameOver(atlas);
         star = new Star[64];
         for (int i = 0; i < star.length; i++) {
             star[i] = new Star(atlas);
@@ -64,7 +67,9 @@ public class GameScreen extends Base2DScreen {
     public void render(float delta) {
         super.render(delta);
         update(delta);
-        checkCollisions();
+        if(!mainShip.isDestroyed()) {
+            checkCollisions();
+        }
         deleteAllDestroyed();
         draw();
     }
@@ -75,11 +80,14 @@ public class GameScreen extends Base2DScreen {
         }
         if (!mainShip.isDestroyed()) {
             mainShip.update(delta);
+            enemyEmitter.generate(delta);
+        } else {
+            gameover.update(delta);
         }
+
         bulletPool.updateActiveSprites(delta);
         explosionPool.updateActiveSprites(delta);
         enemyPool.updateActiveSprites(delta);
-        enemyEmitter.generate(delta);
     }
 
     private void checkCollisions() {
@@ -134,15 +142,18 @@ public class GameScreen extends Base2DScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         background.draw(batch);
+
         for (Star aStar : star) {
             aStar.draw(batch);
         }
-        if (!mainShip.isDestroyed()) {
+
+        if (!mainShip.isDestroyed())
             mainShip.draw(batch);
-        }
         bulletPool.drawActiveSprites(batch);
         explosionPool.drawActiveSprites(batch);
         enemyPool.drawActiveSprites(batch);
+        if (mainShip.isDestroyed())
+            gameover.draw(batch);
         batch.end();
     }
 
@@ -153,6 +164,7 @@ public class GameScreen extends Base2DScreen {
         for (Star aStar : star) {
             aStar.resize(worldBounds);
         }
+        gameover.resize(worldBounds);
         mainShip.resize(worldBounds);
     }
 

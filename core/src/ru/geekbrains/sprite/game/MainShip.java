@@ -160,4 +160,14 @@ public class MainShip extends Ship {
         v.setZero();
     }
 
+    public int getHealth() {
+        return hp;
+    }
+
+    public void startNewGame() {
+        stop();
+        pos.x = worldBounds.pos.x;
+        this.hp = 100;
+        flushDestroy();
+    }
 }

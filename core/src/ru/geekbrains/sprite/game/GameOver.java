@@ -8,6 +8,7 @@ import ru.geekbrains.math.Rect;
 
 public class GameOver extends Sprite {
     private Vector2 v = new Vector2(0.0f, -0.1f);
+    private boolean stopped = false;
 
     public GameOver(TextureAtlas atlas) {
         super(atlas.findRegion("message_game_over"));
@@ -21,7 +22,13 @@ public class GameOver extends Sprite {
 
     @Override
     public void update(float delta) {
-        if(pos.y - getHalfHeight() > 0)
+        if(stopped == false && pos.y - getHalfHeight() > 0)
             pos.mulAdd(v, delta);
+        else
+            stopped = true;
+    }
+
+    public boolean isStopped() {
+        return stopped;
     }
 }
